@@ -190,3 +190,11 @@ plt.legend()
 plt.grid(True)
 plt.show()
 
+# DO ZROBIENIA
+"""
+1. wielomiany/funkcje-tryg/etc. mają mieć współczynniki do wpisania przez użytkownika
+2. dodać komentarze i zrozumieć kod
+3. zmodyfikować wykres
+4. pozmieniać np. "is not None"
+5. rozdzielić funkcje na pliki źródłowe (na górze dodać 'import drugiplik.py')
+"""
