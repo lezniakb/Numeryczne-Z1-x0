@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Obliczanie wielomianu metodą Hornera
-def obliczWielomianHorner(x, wspolczynniki, dlugosc):
+def obliczWielomianHornerem(x, wspolczynniki, dlugosc):
     wynik = wspolczynniki[0]
     i = 1
     while i < dlugosc:
@@ -15,7 +15,7 @@ def obliczWielomianHorner(x, wspolczynniki, dlugosc):
 def funkcjaWielomianowa(x):
     wspolczynniki = [1, -2, 0, -5]  # odpowiada x^3 - 2x^2 + 0*x - 5
     dlugosc = len(wspolczynniki)
-    return obliczWielomianHorner(x, wspolczynniki, dlugosc)
+    return obliczWielomianHornerem(x, wspolczynniki, dlugosc)
 
 # Funkcja trygonometryczna: sin(x) - 0.5
 def funkcjaTrygonometryczna(x):
@@ -29,104 +29,116 @@ def funkcjaWykladnicza(x):
 def funkcjaZlozona(x):
     return math.e**(math.sin(x)) - 2
 
-# Metoda bisekcji bez użycia break/continue
 def metodaBisekcji(funkcja, poczatek, koniec, dokladnosc=None, maksIteracji=None):
     if funkcja(poczatek) * funkcja(koniec) >= 0:
         print("Błąd: funkcja nie zmienia znaku na końcach przedziału!")
         return None, 0
     iteracja = 0
-    # Inicjalne wyznaczenie punktu środkowego
-    c = (poczatek + koniec) / 2.0
+    # wyznaczamy punkt środkowy
+    polowa = (poczatek + koniec) / float(2)
 
-    if dokladnosc is not None:
-        warunek = abs(funkcja(c)) >= dokladnosc
-        while warunek:
-            iteracja = iteracja + 1
-            c = (poczatek + koniec) / 2.0
-            if funkcja(poczatek) * funkcja(c) < 0:
-                koniec = c
+    # jezeli wprowadzilismy dokladnosc, to wykonuje sie ten blok
+    if dokladnosc != None:
+        # znajdujemy modul z obliczonej polowy funkcji
+        modulPolowyFunkcji = abs(funkcja(polowa))
+        sprawdzenie = modulPolowyFunkcji > dokladnosc
+        # dopoki modul z polowy funkcji jest wciaz wiekszy niz zadana dokladnosc to wykonuj
+        while sprawdzenie == True:
+            iteracja += 1
+            polowa = (poczatek + koniec) / float(2)
+            if funkcja(poczatek) * funkcja(polowa) < 0:
+                koniec = polowa
             else:
-                poczatek = c
-            warunek = abs(funkcja(c)) >= dokladnosc
-    elif maksIteracji is not None:
-        warunek = iteracja < maksIteracji
-        while warunek:
-            iteracja = iteracja + 1
-            c = (poczatek + koniec) / 2.0
-            if funkcja(poczatek) * funkcja(c) < 0:
-                koniec = c
-            else:
-                poczatek = c
-            warunek = iteracja < maksIteracji
-    return c, iteracja
+                poczatek = polowa
+            modulPolowyFunkcji = abs(funkcja(polowa))
+            # dopoki w sprawdzeniu modul kolejnej polowy funkcji jest wiekszy od zadanej dokladnosci to powtorz
+            sprawdzenie = modulPolowyFunkcji > dokladnosc
 
-# Metoda siecznych bez użycia break/continue
+    # jezeli wprowadzilismy maksymalna ilosc iteracji, to wykonuje sie ten blok
+    elif maksIteracji != None:
+        sprawdzenie = iteracja < maksIteracji
+        # dopoki iteracji jest mniej niz podanej maksymalnej liczby to wykonuj
+        while sprawdzenie == True:
+            iteracja += 1
+            polowa = (poczatek + koniec) / float(2)
+            if funkcja(poczatek) * funkcja(polowa) < 0:
+                koniec = polowa
+            else:
+                poczatek = polowa
+            sprawdzenie = iteracja < maksIteracji
+    return polowa, iteracja
+
 def metodaSiecznych(funkcja, poczatek, koniec, dokladnosc=None, maksIteracji=None):
     iteracja = 0
     x0 = poczatek
     x1 = koniec
-    bladDziel = False
-    if dokladnosc is not None:
-        warunek = abs(funkcja(x1)) >= dokladnosc
-        while warunek and (bladDziel is False):
-            iteracja = iteracja + 1
+    bladDzielenia = False
+    if dokladnosc != None:
+        modulFunkcji = abs(funkcja(x1))
+        warunek = modulFunkcji >= dokladnosc
+        while warunek and (bladDzielenia == False):
+            iteracja += 1
             mianownik = funkcja(x1) - funkcja(x0)
             if mianownik == 0:
                 print("Błąd: dzielenie przez zero w metodzie siecznych!")
-                bladDziel = True
+                bladDzielenia = True
             else:
                 x2 = x1 - funkcja(x1) * (x1 - x0) / mianownik
                 x0 = x1
                 x1 = x2
-            warunek = abs(funkcja(x1)) >= dokladnosc and (bladDziel is False)
+            modulFunkcji = abs(funkcja(x1))
+            warunek = modulFunkcji >= dokladnosc and (bladDzielenia is False)
     elif maksIteracji is not None:
         warunek = iteracja < maksIteracji
-        while warunek and (bladDziel is False):
-            iteracja = iteracja + 1
+        while warunek and (bladDzielenia == False):
+            iteracja += 1
             mianownik = funkcja(x1) - funkcja(x0)
             if mianownik == 0:
                 print("Błąd: dzielenie przez zero w metodzie siecznych!")
-                bladDziel = True
+                bladDzielenia = True
             else:
                 x2 = x1 - funkcja(x1) * (x1 - x0) / mianownik
                 x0 = x1
                 x1 = x2
-            warunek = iteracja < maksIteracji and (bladDziel is False)
-    if bladDziel:
+            warunek = iteracja < maksIteracji and (bladDzielenia is False)
+    if bladDzielenia:
         return None, iteracja
     return x1, iteracja
 
-# Funkcja wyznaczająca przedział unimodalny bez break/continue
 def znajdzPrzedzialUnimodalny(funkcja, poczatek, koniec, tolerancja, limitIteracji):
-    iteracja = 0
-    znaleziono = (funkcja(poczatek) * funkcja(koniec) < 0)
-    warunek = (not znaleziono) and (iteracja < limitIteracji) and (abs(koniec - poczatek) >= tolerancja)
+    i = 0
+    znaleziono = funkcja(poczatek) * funkcja(koniec) < 0
+    odleglosc = abs(koniec - poczatek)
+    warunek = (not znaleziono) and (i < limitIteracji) and (odleglosc >= tolerancja)
     while warunek:
-        iteracja = iteracja + 1
-        srodek = (poczatek + koniec) / 2.0
+        i += 1
+        srodek = (poczatek + koniec) / float(2)
         if funkcja(poczatek) * funkcja(srodek) < 0:
             koniec = srodek
         elif funkcja(srodek) * funkcja(koniec) < 0:
             poczatek = srodek
         else:
-            delta = abs(koniec - poczatek) / 2.0
+            odleglosc = abs(koniec - poczatek)
+            delta = odleglosc / float(2)
             poczatek = poczatek - delta
             koniec = koniec + delta
         znaleziono = (funkcja(poczatek) * funkcja(koniec) < 0)
-        warunek = (not znaleziono) and (iteracja < limitIteracji) and (abs(koniec - poczatek) >= tolerancja)
-    return poczatek, koniec, iteracja
+        warunek = (not znaleziono) and (i < limitIteracji) and (abs(koniec - poczatek) >= tolerancja)
+    return poczatek, koniec, i
 
 # main
 funkcje = {
-    1: ("Wielomianowa: x^3 - 2x^2 - 5 (Horner)", funkcjaWielomianowa),
-    2: ("Trygonometryczna: sin(x) - 0.5", funkcjaTrygonometryczna),
-    3: ("Wykładnicza: exp(x) - 3", funkcjaWykladnicza),
-    4: ("Złożona: exp(sin(x)) - 2", funkcjaZlozona)
+    1:("Wielomianowa: x^3 - 2x^2 - 5 (Horner)", funkcjaWielomianowa),
+    2:("Trygonometryczna: sin(x) - 0.5", funkcjaTrygonometryczna),
+    3:("Wykładnicza: exp(x) - 3", funkcjaWykladnicza),
+    4:("Złożona: exp(sin(x)) - 2", funkcjaZlozona)
 }
 print("Dostępne funkcje:")
 for klucz in funkcje:
     print(str(klucz) + ": " + funkcje[klucz][0])
 wyborFunkcji = int(input("Podaj numer funkcji: "))
+
+# zmienic tu
 funkcjaWybrana = funkcje.get(wyborFunkcji, funkcje[1])[1]
 
 poczatekPrzedzialu = float(input("Podaj początek przedziału a: "))
@@ -192,9 +204,10 @@ plt.show()
 
 # DO ZROBIENIA
 """
-1. wielomiany/funkcje-tryg/etc. mają mieć współczynniki do wpisania przez użytkownika
+1. wielomiany/funkcje-tryg/etc. mają mieć współczynniki do wpisania przez użytkownika (? zapytać się na labach)
 2. dodać komentarze i zrozumieć kod
 3. zmodyfikować wykres
 4. pozmieniać np. "is not None"
 5. rozdzielić funkcje na pliki źródłowe (na górze dodać 'import drugiplik.py')
+6. kod się miejscami powtarza
 """
