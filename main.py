@@ -1,109 +1,9 @@
 import math
 import matplotlib.pyplot as plt
 import numpy as np
-
-# Obliczanie wielomianu metodą Hornera
-def obliczWielomianHornerem(x, wspolczynniki, dlugosc):
-    wynik = wspolczynniki[0]
-    i = 1
-    while i < dlugosc:
-        wynik = wynik * x + wspolczynniki[i]
-        i = i + 1
-    return wynik
-
-# Funkcja wielomianowa – przykładowo: x^3 - 2x^2 - 5
-def funkcjaWielomianowa(x):
-    wspolczynniki = [1, -2, 0, -5]  # odpowiada x^3 - 2x^2 + 0*x - 5
-    dlugosc = len(wspolczynniki)
-    return obliczWielomianHornerem(x, wspolczynniki, dlugosc)
-
-# Funkcja trygonometryczna: sin(x) - 0.5
-def funkcjaTrygonometryczna(x):
-    return math.sin(x) - 0.5
-
-# Funkcja wykładnicza: exp(x) - 3
-def funkcjaWykladnicza(x):
-    return math.e**(x) - 3
-
-# Funkcja złożona: exp(sin(x)) - 2
-def funkcjaZlozona(x):
-    return math.e**(math.sin(x)) - 2
-
-def metodaBisekcji(funkcja, poczatek, koniec, dokladnosc=None, maksIteracji=None):
-    if funkcja(poczatek) * funkcja(koniec) >= 0:
-        print("Błąd: funkcja nie zmienia znaku na końcach przedziału!")
-        return None, 0
-    iteracja = 0
-    # wyznaczamy punkt środkowy
-    polowa = (poczatek + koniec) / float(2)
-
-    # jezeli wprowadzilismy dokladnosc, to wykonuje sie ten blok
-    if dokladnosc != None:
-        # znajdujemy modul z obliczonej polowy funkcji
-        modulPolowyFunkcji = abs(funkcja(polowa))
-        sprawdzenie = modulPolowyFunkcji > dokladnosc
-        # dopoki modul z polowy funkcji jest wciaz wiekszy niz zadana dokladnosc to wykonuj
-        while sprawdzenie == True:
-            iteracja += 1
-            polowa = (poczatek + koniec) / float(2)
-            if funkcja(poczatek) * funkcja(polowa) < 0:
-                koniec = polowa
-            else:
-                poczatek = polowa
-            modulPolowyFunkcji = abs(funkcja(polowa))
-            # dopoki w sprawdzeniu modul kolejnej polowy funkcji jest wiekszy od zadanej dokladnosci to powtorz
-            sprawdzenie = modulPolowyFunkcji > dokladnosc
-
-    # jezeli wprowadzilismy maksymalna ilosc iteracji, to wykonuje sie ten blok
-    elif maksIteracji != None:
-        sprawdzenie = iteracja < maksIteracji
-        # dopoki iteracji jest mniej niz podanej maksymalnej liczby to wykonuj
-        while sprawdzenie == True:
-            iteracja += 1
-            polowa = (poczatek + koniec) / float(2)
-            if funkcja(poczatek) * funkcja(polowa) < 0:
-                koniec = polowa
-            else:
-                poczatek = polowa
-            sprawdzenie = iteracja < maksIteracji
-    return polowa, iteracja
-
-def metodaSiecznych(funkcja, poczatek, koniec, dokladnosc=None, maksIteracji=None):
-    iteracja = 0
-    x0 = poczatek
-    x1 = koniec
-    bladDzielenia = False
-    if dokladnosc != None:
-        modulFunkcji = abs(funkcja(x1))
-        warunek = modulFunkcji >= dokladnosc
-        while warunek and (bladDzielenia == False):
-            iteracja += 1
-            mianownik = funkcja(x1) - funkcja(x0)
-            if mianownik == 0:
-                print("Błąd: dzielenie przez zero w metodzie siecznych!")
-                bladDzielenia = True
-            else:
-                x2 = x1 - funkcja(x1) * (x1 - x0) / mianownik
-                x0 = x1
-                x1 = x2
-            modulFunkcji = abs(funkcja(x1))
-            warunek = modulFunkcji >= dokladnosc and (bladDzielenia is False)
-    elif maksIteracji is not None:
-        warunek = iteracja < maksIteracji
-        while warunek and (bladDzielenia == False):
-            iteracja += 1
-            mianownik = funkcja(x1) - funkcja(x0)
-            if mianownik == 0:
-                print("Błąd: dzielenie przez zero w metodzie siecznych!")
-                bladDzielenia = True
-            else:
-                x2 = x1 - funkcja(x1) * (x1 - x0) / mianownik
-                x0 = x1
-                x1 = x2
-            warunek = iteracja < maksIteracji and (bladDzielenia is False)
-    if bladDzielenia:
-        return None, iteracja
-    return x1, iteracja
+import metoda_bisekcji as bis
+import metoda_siecznych as sie
+import rownania as r
 
 def znajdzPrzedzialUnimodalny(funkcja, poczatek, koniec, tolerancja, limitIteracji):
     i = 0
@@ -128,10 +28,10 @@ def znajdzPrzedzialUnimodalny(funkcja, poczatek, koniec, tolerancja, limitIterac
 
 # main
 funkcje = {
-    1:("Wielomianowa: x^3 - 2x^2 - 5 (Horner)", funkcjaWielomianowa),
-    2:("Trygonometryczna: sin(x) - 0.5", funkcjaTrygonometryczna),
-    3:("Wykładnicza: exp(x) - 3", funkcjaWykladnicza),
-    4:("Złożona: exp(sin(x)) - 2", funkcjaZlozona)
+    1:("Wielomianowa: 3x^6 + x^3 - 2x^2 - 1 (Horner)", r.funkcjaWielomianowa),
+    2:("Trygonometryczna: sin(x) - 0.5", r.funkcjaTrygonometryczna),
+    3:("Wykładnicza: exp(x) - 3", r.funkcjaWykladnicza),
+    4:("Złożona: exp(sin(x)) - 2", r.funkcjaZlozona)
 }
 print("Dostępne funkcje:")
 for klucz in funkcje:
@@ -163,7 +63,7 @@ else:
     maksIteracji = int(input("Podaj liczbę iteracji: "))
 
 # Obliczenia metodą bisekcji
-miejsceZeroweBisekcji, iterBisekcji = metodaBisekcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, dokladnosc, maksIteracji)
+miejsceZeroweBisekcji, iterBisekcji = bis.metodaBisekcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, dokladnosc, maksIteracji)
 if miejsceZeroweBisekcji is not None:
     print("\nMetoda bisekcji:")
     print("Miejsce zerowe: " + str(miejsceZeroweBisekcji))
@@ -171,7 +71,7 @@ if miejsceZeroweBisekcji is not None:
     print("f(miejsce zerowe) = " + str(funkcjaWybrana(miejsceZeroweBisekcji)))
 
 # Obliczenia metodą siecznych
-miejsceZeroweSiecznych, iterSiecznych = metodaSiecznych(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, dokladnosc, maksIteracji)
+miejsceZeroweSiecznych, iterSiecznych = sie.metodaSiecznych(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, dokladnosc, maksIteracji)
 if miejsceZeroweSiecznych is not None:
     print("\nMetoda siecznych:")
     print("Miejsce zerowe: " + str(miejsceZeroweSiecznych))
