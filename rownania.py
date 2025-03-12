@@ -1,19 +1,32 @@
 # Obliczanie wielomianu metodą Hornera
 import math
 
-def obliczWielomianHornerem(x, wspolczynniki, dlugosc):
+# Stare
+# def obliczWielomianHornerem(x, wspolczynniki, dlugosc):
+#     wynik = wspolczynniki[0]
+#     i = 1
+#     while i < dlugosc:
+#         wynik = wynik * x + wspolczynniki[i]
+#         i = i + 1
+#     return wynik
+
+def obliczWielomianHornerem(x, wspolczynniki):
     wynik = wspolczynniki[0]
-    i = 1
-    while i < dlugosc:
-        wynik = wynik * x + wspolczynniki[i]
-        i = i + 1
+    for wspolczynnik in wspolczynniki[1:]:
+        wynik = wynik * x + wspolczynnik
     return wynik
 
-# Funkcja wielomianowa – przykładowo: 3x^6 + x^3 - 2x^2 - 1
+# # Funkcja wielomianowa – przykładowo: 3x^6 + x^3 - 2x^2 - 1
+# def funkcjaWielomianowa(x):
+#     wspolczynniki = [3, 0, 0, 1, -2, 0, -1]  # odpowiada 3x^6 + x^3 - 2x^2 - 1
+#     dlugosc = len(wspolczynniki)
+#     return obliczWielomianHornerem(x, wspolczynniki, dlugosc)
+
+# Funkcja wielomianowa – przykładowo: x^3 - 2x^2 - 5
 def funkcjaWielomianowa(x):
-    wspolczynniki = [3, 0, 0, 1, -2, 0, -1]  # odpowiada 3x^6 + x^3 - 2x^2 - 1
-    dlugosc = len(wspolczynniki)
-    return obliczWielomianHornerem(x, wspolczynniki, dlugosc)
+    wspolczynniki = [1, -2, 0, -5]  # odpowiada x^3 - 2x^2 + 0*x - 5
+    # dlugosc = len(wspolczynniki)
+    return obliczWielomianHornerem(x, wspolczynniki) #, dlugosc)
 
 # Funkcja trygonometryczna: sin(x) - 0.5
 def funkcjaTrygonometryczna(x):

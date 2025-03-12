@@ -1,7 +1,7 @@
 def metodaBisekcji(funkcja, poczatek, koniec, dokladnosc=None, maksIteracji=None):
     if funkcja(poczatek) * funkcja(koniec) >= 0:
-        print("Błąd: funkcja nie zmienia znaku na końcach przedziału!")
-        return None, 0
+        input("Błąd: funkcja nie zmienia znaku na końcach przedziału! Kliknij enter aby zakończyć.")
+        exit(1)
     iteracja = 0
     # wyznaczamy punkt środkowy
     polowa = (poczatek + koniec) / float(2)

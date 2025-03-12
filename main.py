@@ -26,6 +26,34 @@ def znajdzPrzedzialUnimodalny(funkcja, poczatek, koniec, tolerancja, limitIterac
         warunek = (not znaleziono) and (i < limitIteracji) and (abs(koniec - poczatek) >= tolerancja)
     return poczatek, koniec, i
 
+def rysowanieFunkcji(funkcja, poczatek, koniec, miejsceZeroweBisekcji=None, miejsceZeroweSiecznych=None):
+    # Przygotowanie danych do wykresu – obliczenie wartości funkcji dla tablicy punktów
+    iloscPunktow = 400
+    tablicaX = np.linspace(poczatek, koniec, iloscPunktow)
+    tablicaY = []
+    i = 0
+    while i < len(tablicaX):
+        tablicaY.append(funkcja(tablicaX[i]))
+        i = i + 1
+
+    # Rysowanie wykresu
+    plt.figure(figsize=(8, 6))
+    plt.plot(tablicaX, tablicaY, label="f(x)")
+    plt.axhline(0, color="black", linewidth=0.5)
+    if miejsceZeroweBisekcji is not None:
+        plt.scatter(miejsceZeroweBisekcji, 0, color="red", zorder=5,
+                    label="Bisekcja")
+    if miejsceZeroweSiecznych is not None:
+        plt.scatter(miejsceZeroweSiecznych, 0, color="blue", zorder=5,
+                    label="Sieczne")
+    plt.xlabel("x")
+    plt.ylabel("f(x)")
+    plt.title("Wykres funkcji")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+
 # main
 funkcje = {
     1:("Wielomianowa: 3x^6 + x^3 - 2x^2 - 1 (Horner)", r.funkcjaWielomianowa),
@@ -39,7 +67,7 @@ for klucz in funkcje:
 wyborFunkcji = int(input("Podaj numer funkcji: "))
 
 # zmienic tu
-funkcjaWybrana = funkcje.get(wyborFunkcji, funkcje[1])[1]
+funkcjaWybrana = funkcje[wyborFunkcji][1] # funkcje.get(wyborFunkcji, funkcje[1])[1]
 
 poczatekPrzedzialu = float(input("Podaj początek przedziału a: "))
 koniecPrzedzialu = float(input("Podaj koniec przedziału b: "))
@@ -50,6 +78,8 @@ if funkcjaWybrana(poczatekPrzedzialu) * funkcjaWybrana(koniecPrzedzialu) >= 0:
     print("Próba wyznaczenia przedziału unimodalnego...")
     poczatekPrzedzialu, koniecPrzedzialu, iterUnimodal = znajdzPrzedzialUnimodalny(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, 1e-6, 50)
     print("Znaleziono przedział: [" + str(poczatekPrzedzialu) + ", " + str(koniecPrzedzialu) + "] po " + str(iterUnimodal) + " iteracjach.")
+
+rysowanieFunkcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu)
 
 print("Wybierz kryterium stopu:")
 print("1: Osiągnięcie zadanej dokładności |f(x)| < epsilon")
@@ -78,29 +108,31 @@ if miejsceZeroweSiecznych is not None:
     print("Liczba iteracji: " + str(iterSiecznych))
     print("f(miejsce zerowe) = " + str(funkcjaWybrana(miejsceZeroweSiecznych)))
 
-# Przygotowanie danych do wykresu – obliczenie wartości funkcji dla tablicy punktów
-iloscPunktow = 400
-tablicaX = np.linspace(poczatekPrzedzialu, koniecPrzedzialu, iloscPunktow)
-tablicaY = []
-i = 0
-while i < len(tablicaX):
-    tablicaY.append(funkcjaWybrana(tablicaX[i]))
-    i = i + 1
+rysowanieFunkcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, miejsceZeroweBisekcji, miejsceZeroweSiecznych)
 
-# Rysowanie wykresu
-plt.figure(figsize=(8, 6))
-plt.plot(tablicaX, tablicaY, label="f(x)")
-plt.axhline(0, color="black", linewidth=0.5)
-if miejsceZeroweBisekcji is not None:
-    plt.scatter(miejsceZeroweBisekcji, funkcjaWybrana(miejsceZeroweBisekcji), color="red", zorder=5, label="Bisekcja")
-if miejsceZeroweSiecznych is not None:
-    plt.scatter(miejsceZeroweSiecznych, funkcjaWybrana(miejsceZeroweSiecznych), color="blue", zorder=5, label="Sieczne")
-plt.xlabel("x")
-plt.ylabel("f(x)")
-plt.title("Wykres funkcji")
-plt.legend()
-plt.grid(True)
-plt.show()
+# # Przygotowanie danych do wykresu – obliczenie wartości funkcji dla tablicy punktów
+# iloscPunktow = 400
+# tablicaX = np.linspace(poczatekPrzedzialu, koniecPrzedzialu, iloscPunktow)
+# tablicaY = []
+# i = 0
+# while i < len(tablicaX):
+#     tablicaY.append(funkcjaWybrana(tablicaX[i]))
+#     i = i + 1
+#
+# # Rysowanie wykresu
+# plt.figure(figsize=(8, 6))
+# plt.plot(tablicaX, tablicaY, label="f(x)")
+# plt.axhline(0, color="black", linewidth=0.5)
+# if miejsceZeroweBisekcji is not None:
+#     plt.scatter(miejsceZeroweBisekcji, funkcjaWybrana(miejsceZeroweBisekcji), color="red", zorder=5, label="Bisekcja")
+# if miejsceZeroweSiecznych is not None:
+#     plt.scatter(miejsceZeroweSiecznych, funkcjaWybrana(miejsceZeroweSiecznych), color="blue", zorder=5, label="Sieczne")
+# plt.xlabel("x")
+# plt.ylabel("f(x)")
+# plt.title("Wykres funkcji")
+# plt.legend()
+# plt.grid(True)
+# plt.show()
 
 # DO ZROBIENIA
 """
