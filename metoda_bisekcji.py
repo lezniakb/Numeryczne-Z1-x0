@@ -1,13 +1,14 @@
 def metodaBisekcji(funkcja, poczatek, koniec, dokladnosc=0, maksIteracji=0):
     if funkcja(poczatek) * funkcja(koniec) >= 0:
-        print("Błąd: funkcja nie zmienia znaku na końcach przedziału!")
+        print("Funkcja nie zmienia znaku na końcach przedziału\nMetoda bisekcji nie zostaje uwzględniona.")
         return None, 0
     iteracja = 0
     maksIteracjiDokladnosc = 200
     a = poczatek
     b = koniec
 
-    while True:
+    czySpelniony = False
+    while czySpelniony == False:
         iteracja += 1
         fa = funkcja(a)
         fb = funkcja(b)
@@ -19,13 +20,14 @@ def metodaBisekcji(funkcja, poczatek, koniec, dokladnosc=0, maksIteracji=0):
         if dokladnosc != 0:
             modulFunkcji = abs(f0)
             if modulFunkcji < dokladnosc:
-                break
+                czySpelniony = True
             elif iteracja >= maksIteracjiDokladnosc:
                 print("Błąd: przekroczono maksymalną ilość iteracji dla warunku |f(xi)| < epsilon")
                 return None, iteracja
         elif maksIteracji != 0 and iteracja >= maksIteracji:
             break
 
+        # warunki konieczne do metody bisekcji
         if f0 * fb < 0:
             a = x0
         elif f0 * fa < 0:

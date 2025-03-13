@@ -7,9 +7,9 @@ def metodaSiecznych(funkcja, poczatek, koniec, dokladnosc=0, maksIteracji=0):
     while True:
         iteracja += 1
         mianownik = funkcja(x2) - funkcja(x1)
+        # gdy funkcja zejdzie tak blisko 0 ze program uzna ze jest rowna 0
         if mianownik == 0:
-            print("Błąd: dzielenie przez zero w metodzie siecznych!")
-            return None, iteracja
+            return x2, iteracja
         else:
             x3 = x2 - funkcja(x2) * (x2 - x1) / mianownik
             x1 = x2
@@ -20,7 +20,6 @@ def metodaSiecznych(funkcja, poczatek, koniec, dokladnosc=0, maksIteracji=0):
             if modulFunkcji < dokladnosc:
                 break
             elif iteracja >= maksIteracjiDokladnosc:
-                print("Błąd: przekroczono maksymalną ilość iteracji dla warunku |f(xi)| < epsilon")
                 return None, iteracja
         elif maksIteracji != 0 and iteracja >= maksIteracji:
             break

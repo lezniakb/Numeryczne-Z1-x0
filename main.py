@@ -5,33 +5,44 @@ import metoda_siecznych as sie
 import rownania as r
 
 
-def rysowanieFunkcji(funkcja, poczatek=-20.0, koniec=20.0, miejsceZeroweBisekcji=None, miejsceZeroweSiecznych=None):
-    # Przygotowanie danych do wykresu – obliczenie wartości funkcji dla tablicy punktów
-    iloscPunktow = 400
-    tablicaX = np.linspace(poczatek, koniec, iloscPunktow)
+def rysowanieFunkcji(funkcja, poczatek=-14.0, koniec=14.0, miejsceZeroweBisekcji=None, miejsceZeroweSiecznych=None):
+    punktow = 400
+    tablicaX = np.linspace(poczatek, koniec, punktow)
     tablicaY = []
 
     for x in tablicaX:
         tablicaY.append(funkcja(x))
 
-    # Rysowanie wykresu
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(8.2, 6.2))
     plt.plot(tablicaX, tablicaY, label="f(x)")
     plt.axhline(0, color="black", linewidth=0.5)
-    if miejsceZeroweBisekcji is not None:
+
+    # jesli zostalo podane miejsce zerowe dla metody bisekcji to pokaz czerwony trójkąt
+    if miejsceZeroweBisekcji != nieIstnieje:
         plt.scatter(miejsceZeroweBisekcji, 0, color="None", zorder=5,
                     label="Bisekcja", marker="^", edgecolors="red", s=100)
-    if miejsceZeroweSiecznych is not None:
+
+    # jesli zostalo podane miejsce zerowe dla metody siecznych to pokaz niebieski X
+    if miejsceZeroweSiecznych != nieIstnieje:
         plt.scatter(miejsceZeroweSiecznych, 0, color="None", zorder=5,
                     label="Sieczne", marker="X", edgecolors="blue", s=100)
+
     plt.xlabel("x")
     plt.ylabel("f(x)")
     plt.title("Wykres funkcji")
     plt.legend()
     plt.grid(True)
+
     plt.show()
 
 
+def zabezpieczenie(dane):
+    if (dane.replace('.', '', 1).isdigit() or
+            dane.lstrip('-').replace('.', '', 1).isdigit()):
+        return True
+    else:
+        print("Musisz podać liczbę!")
+        return False
 # main
 funkcje = {
     1:("Wielomianowa: 3x^6 + x^3 - 2x^2 - 1 (Horner)", r.funkcjaWielomianowa),
@@ -40,55 +51,106 @@ funkcje = {
     4:("Złożona: exp(sin(x)) - 2", r.funkcjaZlozona),
     5:("Kwadratowa: (bez miejsc zerowych)", r.funkcjaBezMiejscZerowych)
 }
-print("Dostępne funkcje:")
-for klucz in funkcje:
-    print(str(klucz) + ": " + funkcje[klucz][0])
-wyborFunkcji = int(input("Podaj numer funkcji: ")) #input - dodać zabezpieczenia
+nieIstnieje = None
+print("Wybierz funkcje:")
+iteracja = 1
+for wybor in funkcje:
+    stringIteracja = str(iteracja)
+    stringWybor = funkcje[wybor][0]
+    print(stringIteracja + ": " + stringWybor)
+    iteracja += 1
 
+# zabezpieczenie przez wprowadzaniem zlego znaku albo nieistniejacej funkcji
+wyborFunkcji = input("Podaj numer funkcji: ")
+dostepneWybory = [1, 2, 3, 4, 5]
+
+while (wyborFunkcji.isdigit() == False) or (int(wyborFunkcji) not in dostepneWybory):
+    print("Podaj liczbę całkowitą z przedziału 1-5!")
+    wyborFunkcji = input("Podaj numer funkcji: ")
+
+wyborFunkcji = int(wyborFunkcji)
 funkcjaWybrana = funkcje[wyborFunkcji][1]
-
 rysowanieFunkcji(funkcjaWybrana)
 
-poczatekPrzedzialu = float(input("Podaj początek przedziału a: ")) #input - dodać zabezpieczenia
-koniecPrzedzialu = float(input("Podaj koniec przedziału b: ")) #input - dodać zabezpieczenia
+poczatekPrzedzialu = input("Podaj początek przedziału: ")
+while zabezpieczenie(poczatekPrzedzialu) == False:
+    poczatekPrzedzialu = input("Podaj początek przedziału: ")
+
+koniecPrzedzialu = input("Podaj koniec przedziału: ")
+while zabezpieczenie(koniecPrzedzialu) == False:
+    koniecPrzedzialu = input("Podaj koniec przedziału: ")
+
+poczatekPrzedzialu = float(poczatekPrzedzialu)
+koniecPrzedzialu = float(koniecPrzedzialu)
 
 # sprawdzenie czy funkcja zmienia znak na koncach przedzialu
 if funkcjaWybrana(poczatekPrzedzialu) * funkcjaWybrana(koniecPrzedzialu) >= 0:
     print("Funkcja nie zmienia znaku na końcach przedziału, warunek bisekcji nie został spełniony.")
-    # exit(0)
 
 print("Wybierz kryterium stopu:")
 print("1: Osiągnięcie zadanej dokładności |f(x)| < epsilon")
 print("2: Wykonanie określonej liczby iteracji")
-wyborKryterium = int(input("Podaj numer kryterium: ")) #input - dodać zabezpieczenia
+
+dostepneWybory = [1, 2]
+poprawnosc = 0
+while poprawnosc == 0:
+    wyborKryterium = input("Podaj numer kryterium: ")
+
+    if wyborKryterium.isdigit() and int(wyborKryterium) in dostepneWybory:
+        wyborKryterium = int(wyborKryterium)
+        poprawnosc = 1
+    else:
+        print("Niewłaściwy wybór: wpisz 1 lub 2")
+
 dokladnosc = 0
 maksIteracji = 0
+poprawnosc = 0
+
 if wyborKryterium == 1:
-    dokladnosc = float(input("Podaj epsilon: ")) #input - dodać zabezpieczenia
+    while poprawnosc == 0:
+        dokladnosc = input("Podaj epsilon: ")
+        if dokladnosc.replace('.', '', 1).isdigit() and float(dokladnosc) > 0:
+            dokladnosc = float(dokladnosc)
+            poprawnosc = 1
+        else:
+            print("Epsilon musi być większy niż 0")
 else:
-    maksIteracji = int(input("Podaj liczbę iteracji: ")) #input - dodać zabezpieczenia
+    while poprawnosc == 0:
+        maksIteracji = input("Podaj liczbę iteracji: ")
+        if maksIteracji.isdigit() and int(maksIteracji) > 0:
+            maksIteracji = int(maksIteracji)
+            poprawnosc = 1
+        else:
+            print("Liczba iteracji musi być większa niż 0")
 
 # metoda bisekcji tutaj liczona
 miejsceZeroweBisekcji, iterBisekcji = bis.metodaBisekcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, dokladnosc, maksIteracji)
-if miejsceZeroweBisekcji is not None:
-    print("\nMetoda bisekcji:")
-    print("Miejsce zerowe: " + str(miejsceZeroweBisekcji))
-    print("Liczba iteracji: " + str(iterBisekcji))
-    print("f(miejsce zerowe) = " + str(funkcjaWybrana(miejsceZeroweBisekcji)))
+if miejsceZeroweBisekcji != nieIstnieje:
+    znalezionaWartoscZerowego = funkcjaWybrana(miejsceZeroweBisekcji)
+    print("\nMetoda bisekcji:"
+          "\nMiejsce zerowe:" + str(miejsceZeroweBisekcji) +
+          "\nLiczba iteracji: " + str(iterBisekcji) +
+          "\nf(miejsce zerowe) = " + str(znalezionaWartoscZerowego))
 
 # tutaj sieczne
 miejsceZeroweSiecznych, iterSiecznych = sie.metodaSiecznych(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, dokladnosc, maksIteracji)
-if miejsceZeroweSiecznych is not None:
-    print("\nMetoda siecznych:")
-    print("Miejsce zerowe: " + str(miejsceZeroweSiecznych))
-    print("Liczba iteracji: " + str(iterSiecznych))
-    print("f(miejsce zerowe) = " + str(funkcjaWybrana(miejsceZeroweSiecznych)))
+if miejsceZeroweSiecznych != nieIstnieje:
+    znalezionaWartoscZerowego = funkcjaWybrana(miejsceZeroweSiecznych)
+    print("\nMetoda siecznych:"
+          "\nMiejsce zerowe:" + str(miejsceZeroweSiecznych) +
+          "\nLiczba iteracji: " + str(iterSiecznych) +
+          "\nf(miejsce zerowe) = " + str(znalezionaWartoscZerowego))
 
-rysowanieFunkcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, miejsceZeroweBisekcji, miejsceZeroweSiecznych)
+print(miejsceZeroweBisekcji)
+print(miejsceZeroweSiecznych)
+# TypeError: '<' not supported between instances of 'float' and 'NoneType'
+if koniecPrzedzialu < miejsceZeroweBisekcji < poczatekPrzedzialu:
+    print("DEBUG: miejsce zerowe bisekcji poza funkcją!")
+    rysowanieFunkcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, None, miejsceZeroweSiecznych)
 
-"""
-3. zmodyfikować wykres (zmienić kropkę na trójkąt i dać przezroczyste wypełnienie)
-4. pozmieniać np. "is not None" i poprawić kod stylistycznie (wygląda sus) + dodawać zmienne pośrednie
-6. kod się miejscami powtarza
-7. zmodyfikować kod, żeby w przypadku funkcji bez miejsc zerowych w metodzie sieczych był limit iteracji np. 200
-"""
+elif koniecPrzedzialu < miejsceZeroweSiecznych < poczatekPrzedzialu:
+    print("DEBUG: miejsce zerowe siecznych poza funkcją!")
+    rysowanieFunkcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, miejsceZeroweBisekcji)
+
+else:
+    rysowanieFunkcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, miejsceZeroweBisekcji, miejsceZeroweSiecznych)
