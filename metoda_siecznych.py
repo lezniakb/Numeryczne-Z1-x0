@@ -9,9 +9,6 @@ def metodaSiecznych(funkcja, poczatek, koniec, dokladnosc=0, maksIteracji=0):
         mianownik = funkcja(x2) - funkcja(x1)
         if mianownik == 0:
             print("Błąd: dzielenie przez zero w metodzie siecznych!")
-            print(funkcja(x2))
-            print(funkcja(x1))
-            print(iteracja)
             return None, iteracja
         else:
             x3 = x2 - funkcja(x2) * (x2 - x1) / mianownik
