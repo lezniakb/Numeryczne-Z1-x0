@@ -1,13 +1,13 @@
-def metodaBisekcji(funkcja, poczatek, koniec, dokladnosc=None, maksIteracji=None):
+def metodaBisekcji(funkcja, poczatek, koniec, dokladnosc=0, maksIteracji=0):
     if funkcja(poczatek) * funkcja(koniec) >= 0:
-        input("Błąd: funkcja nie zmienia znaku na końcach przedziału! Kliknij enter aby zakończyć.")
-        exit(1)
+        print("Błąd: funkcja nie zmienia znaku na końcach przedziału!")
+        return None, 0
     iteracja = 0
     # wyznaczamy punkt środkowy
     polowa = (poczatek + koniec) / float(2)
 
     # jezeli wprowadzilismy dokladnosc, to wykonuje sie ten blok
-    if dokladnosc != None:
+    if dokladnosc != 0:
         # znajdujemy modul z obliczonej polowy funkcji
         modulPolowyFunkcji = abs(funkcja(polowa))
         sprawdzenie = modulPolowyFunkcji > dokladnosc
@@ -24,7 +24,7 @@ def metodaBisekcji(funkcja, poczatek, koniec, dokladnosc=None, maksIteracji=None
             sprawdzenie = modulPolowyFunkcji > dokladnosc
 
     # jezeli wprowadzilismy maksymalna ilosc iteracji, to wykonuje sie ten blok
-    elif maksIteracji != None:
+    elif maksIteracji != 0:
         sprawdzenie = iteracja < maksIteracji
         # dopoki iteracji jest mniej niz podanej maksymalnej liczby to wykonuj
         while sprawdzenie == True:
