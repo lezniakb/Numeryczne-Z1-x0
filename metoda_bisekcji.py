@@ -14,18 +14,18 @@ def metodaBisekcji(funkcja, poczatek, koniec, dokladnosc=0, maksIteracji=0):
         fb = funkcja(b)
 
         # wyznaczamy punkt środkowy
-        x0 = (a + b) / 2.0
+        x0 = (a + b) / float(2)
         f0 = funkcja(x0)
 
         if dokladnosc != 0:
             modulFunkcji = abs(f0)
             if modulFunkcji < dokladnosc:
-                czySpelniony = True
+                return x0, iteracja
             elif iteracja >= maksIteracjiDokladnosc:
-                print("Błąd: przekroczono maksymalną ilość iteracji dla warunku |f(xi)| < epsilon")
+                print("Błąd: przekroczono limit iteracji (zapobiegnięcie nieskończonej pętli")
                 return None, iteracja
         elif maksIteracji != 0 and iteracja >= maksIteracji:
-            break
+            return x0, iteracja
 
         # warunki konieczne do metody bisekcji
         if f0 * fb < 0:

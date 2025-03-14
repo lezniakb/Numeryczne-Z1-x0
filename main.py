@@ -141,9 +141,6 @@ if miejsceZeroweSiecznych != nieIstnieje:
           "\nLiczba iteracji: " + str(iterSiecznych) +
           "\nf(miejsce zerowe) = " + str(znalezionaWartoscZerowego))
 
-print(miejsceZeroweBisekcji)
-print(miejsceZeroweSiecznych)
-
 # jesli miejsce zerowe
 if miejsceZeroweBisekcji is not None and not (poczatekPrzedzialu < miejsceZeroweBisekcji < koniecPrzedzialu):
     print("DEBUG: miejsce zerowe bisekcji poza przedziałem!")
