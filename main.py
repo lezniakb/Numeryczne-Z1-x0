@@ -153,3 +153,9 @@ elif miejsceZeroweSiecznych is not None and not (poczatekPrzedzialu < miejsceZer
 else:
     rysowanieFunkcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, miejsceZeroweBisekcji, miejsceZeroweSiecznych)
 
+"""
+Todo
+1. dodac wiecej komentarzy
+2. usunac WSZYSTKIE break i "is not none"
+3. zrobić to jakoś żeby main lepiej wyglądał, bo te warunki sprawdzania poprawnosci wygladaja TRAGICZNIE
+"""
