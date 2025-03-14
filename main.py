@@ -143,14 +143,16 @@ if miejsceZeroweSiecznych != nieIstnieje:
 
 print(miejsceZeroweBisekcji)
 print(miejsceZeroweSiecznych)
-# TypeError: '<' not supported between instances of 'float' and 'NoneType'
-if koniecPrzedzialu < miejsceZeroweBisekcji < poczatekPrzedzialu:
-    print("DEBUG: miejsce zerowe bisekcji poza funkcją!")
+
+# jesli miejsce zerowe
+if miejsceZeroweBisekcji is not None and not (poczatekPrzedzialu < miejsceZeroweBisekcji < koniecPrzedzialu):
+    print("DEBUG: miejsce zerowe bisekcji poza przedziałem!")
     rysowanieFunkcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, None, miejsceZeroweSiecznych)
 
-elif koniecPrzedzialu < miejsceZeroweSiecznych < poczatekPrzedzialu:
-    print("DEBUG: miejsce zerowe siecznych poza funkcją!")
+elif miejsceZeroweSiecznych is not None and not (poczatekPrzedzialu < miejsceZeroweSiecznych < koniecPrzedzialu):
+    print("DEBUG: miejsce zerowe siecznych poza przedziałem!")
     rysowanieFunkcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, miejsceZeroweBisekcji)
 
 else:
     rysowanieFunkcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, miejsceZeroweBisekcji, miejsceZeroweSiecznych)
+
