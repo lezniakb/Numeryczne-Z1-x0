@@ -160,4 +160,5 @@ Todo
 3. zrobić to jakoś żeby main lepiej wyglądał, bo te warunki sprawdzania poprawnosci wygladaja TRAGICZNIE
 4. Borowska mowila 5, 6 funkcji. Moze dodamy np. drugi (calkowicie inny) wielomian? Jej to sie moze spodobac (i maly koszt pracy)
         ta f. kwadratowa mi srednio pasuje, moze lepiej jak zrobimy dwie wielomianowe i inna trygonometryczna (np. cos(x) - 0.2 ?)
+5. 12 linijka w siecznej, logika do poprawy (ja zepsulem, ja naprawie)
 """
