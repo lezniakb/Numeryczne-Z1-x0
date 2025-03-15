@@ -7,8 +7,7 @@ def metodaBisekcji(funkcja, poczatek, koniec, dokladnosc=0, maksIteracji=0):
     a = poczatek
     b = koniec
 
-    czySpelniony = False
-    while czySpelniony == False:
+    for i in range(maksIteracjiDokladnosc):
         iteracja += 1
         fa = funkcja(a)
         fb = funkcja(b)
@@ -22,10 +21,8 @@ def metodaBisekcji(funkcja, poczatek, koniec, dokladnosc=0, maksIteracji=0):
             if modulFunkcji < dokladnosc:
                 return x0, iteracja
             elif iteracja >= maksIteracjiDokladnosc:
-                print("Błąd: przekroczono limit iteracji (zapobiegnięcie nieskończonej pętli")
-                return None, iteracja
-        elif maksIteracji != 0 and iteracja >= maksIteracji:
-            return x0, iteracja
+                print("Przekroczono limit iteracji (zapobiegnięcie nieskończonej pętli)\nFunkcja zakończyła działanie.")
+                return x0, iteracja
 
         # warunki konieczne do metody bisekcji
         if f0 * fb < 0:

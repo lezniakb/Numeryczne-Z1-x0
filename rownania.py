@@ -1,16 +1,18 @@
 import math
 
-
 def obliczWielomianHornerem(x, wspolczynniki):
     wynik = wspolczynniki[0]
     for wspolczynnik in wspolczynniki[1:]:
         wynik = wynik * x + wspolczynnik
     return wynik
 
+def funkcjaWielomianowaUjemna(x):
+    wspolczynniki = [-2, 4, 0, 5] # odpowiada -2x^3 + 4x^2 + 5
+    return obliczWielomianHornerem(x, wspolczynniki)
 
-def funkcjaWielomianowa(x):
+def funkcjaWielomianowaDodatnia(x):
     wspolczynniki = [1, -2, 0, -5] # odpowiada x^3 - 2x^2 + 0*x - 5
-    return obliczWielomianHornerem(x, wspolczynniki) #, dlugosc)
+    return obliczWielomianHornerem(x, wspolczynniki)
 
 # sin(x) - 0.5
 def funkcjaTrygonometryczna(x):

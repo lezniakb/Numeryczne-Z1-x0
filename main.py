@@ -5,7 +5,7 @@ import metoda_siecznych as sie
 import rownania as r
 
 
-def rysowanieFunkcji(funkcja, poczatek=-14.0, koniec=14.0, miejsceZeroweBisekcji=None, miejsceZeroweSiecznych=None):
+def rysowanieFunkcji(funkcja, poczatek=-15.0, koniec=15.0, miejsceZeroweBisekcji=None, miejsceZeroweSiecznych=None):
     punktow = 400
     tablicaX = np.linspace(poczatek, koniec, punktow)
     tablicaY = []
@@ -43,15 +43,19 @@ def zabezpieczenie(dane):
     else:
         print("Musisz podać liczbę!")
         return False
+
 # main
 funkcje = {
-    1:("Wielomianowa: 3x^6 + x^3 - 2x^2 - 1 (Horner)", r.funkcjaWielomianowa),
+    1:("Wielomianowa: 3x^6 + x^3 - 2x^2 - 1 (Horner)", r.funkcjaWielomianowaDodatnia),
     2:("Trygonometryczna: sin(x) - 0.5", r.funkcjaTrygonometryczna),
     3:("Wykładnicza: exp(x) - 3", r.funkcjaWykladnicza),
     4:("Złożona: exp(sin(x)) - 2", r.funkcjaZlozona),
-    5:("Kwadratowa: (bez miejsc zerowych)", r.funkcjaBezMiejscZerowych)
+    5:("Kwadratowa: (bez miejsc zerowych)", r.funkcjaBezMiejscZerowych),
+    6:("Wielomianowa: -2x^3 + 4x^2 + 5 (Horner)", r.funkcjaWielomianowaUjemna)
 }
 nieIstnieje = None
+
+# wybor funkcji przez uzytkownika
 print("Wybierz funkcje:")
 iteracja = 1
 for wybor in funkcje:
@@ -62,16 +66,26 @@ for wybor in funkcje:
 
 # zabezpieczenie przez wprowadzaniem zlego znaku albo nieistniejacej funkcji
 wyborFunkcji = input("Podaj numer funkcji: ")
-dostepneWybory = [1, 2, 3, 4, 5]
+dostepneWybory = [1, 2, 3, 4, 5, 6]
 
+# powtarzaj prosbe o podanie funkcji z zakresu
 while (wyborFunkcji.isdigit() == False) or (int(wyborFunkcji) not in dostepneWybory):
-    print("Podaj liczbę całkowitą z przedziału 1-5!")
+    print("Podaj liczbę całkowitą z przedziału 1-6!")
     wyborFunkcji = input("Podaj numer funkcji: ")
 
+# zapisz funkcje podana przez uzytkownika
 wyborFunkcji = int(wyborFunkcji)
 funkcjaWybrana = funkcje[wyborFunkcji][1]
-rysowanieFunkcji(funkcjaWybrana)
 
+# zmniejszenie przedzialow na rysunku dla widocznosci
+if wyborFunkcji == 1 or wyborFunkcji == 6:
+    rysowanieFunkcji(funkcjaWybrana, -2, 4)
+elif wyborFunkcji == 3:
+    rysowanieFunkcji(funkcjaWybrana, -2, 2.5)
+else:
+    rysowanieFunkcji(funkcjaWybrana, -5, 5)
+
+# zabezpieczenie przed podaniem niewlasciwego przedzialu
 poczatekPrzedzialu = input("Podaj początek przedziału: ")
 while zabezpieczenie(poczatekPrzedzialu) == False:
     poczatekPrzedzialu = input("Podaj początek przedziału: ")
@@ -80,22 +94,24 @@ koniecPrzedzialu = input("Podaj koniec przedziału: ")
 while zabezpieczenie(koniecPrzedzialu) == False:
     koniecPrzedzialu = input("Podaj koniec przedziału: ")
 
+# zapisz przedzialy jako float
 poczatekPrzedzialu = float(poczatekPrzedzialu)
 koniecPrzedzialu = float(koniecPrzedzialu)
 
-# sprawdzenie czy funkcja zmienia znak na koncach przedzialu
-if funkcjaWybrana(poczatekPrzedzialu) * funkcjaWybrana(koniecPrzedzialu) >= 0:
-    print("Funkcja nie zmienia znaku na końcach przedziału, warunek bisekcji nie został spełniony.")
+if koniecPrzedzialu <= poczatekPrzedzialu:
+    print("Wprowadzono niewłaściwe przedziały!")
+    exit(0)
 
-print("Wybierz kryterium stopu:")
-print("1: Osiągnięcie zadanej dokładności |f(x)| < epsilon")
-print("2: Wykonanie określonej liczby iteracji")
+# wyswietl kryteria stopu
+print("Wybierz kryterium stopu:\n"
+      "1: Osiągnięcie zadanej dokładności |f(x)| < epsilon\n"
+      "2: Wykonanie określonej liczby iteracji")
 
+# pros uzytkownika w petli o poprawne wybranie kryterium stopu
 dostepneWybory = [1, 2]
 poprawnosc = 0
 while poprawnosc == 0:
     wyborKryterium = input("Podaj numer kryterium: ")
-
     if wyborKryterium.isdigit() and int(wyborKryterium) in dostepneWybory:
         wyborKryterium = int(wyborKryterium)
         poprawnosc = 1
@@ -106,6 +122,7 @@ dokladnosc = 0
 maksIteracji = 0
 poprawnosc = 0
 
+# sprawdzaj w petli czy uzytkownik dobrze podal epsilon
 if wyborKryterium == 1:
     while poprawnosc == 0:
         dokladnosc = input("Podaj epsilon: ")
@@ -114,6 +131,7 @@ if wyborKryterium == 1:
             poprawnosc = 1
         else:
             print("Epsilon musi być większy niż 0")
+# sprawdzaj w petli czy uzytkownik dobrze podal liczbe iteracji
 else:
     while poprawnosc == 0:
         maksIteracji = input("Podaj liczbę iteracji: ")
@@ -127,8 +145,8 @@ else:
 miejsceZeroweBisekcji, iterBisekcji = bis.metodaBisekcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, dokladnosc, maksIteracji)
 if miejsceZeroweBisekcji != nieIstnieje:
     znalezionaWartoscZerowego = funkcjaWybrana(miejsceZeroweBisekcji)
-    print("\nMetoda bisekcji:"
-          "\nMiejsce zerowe:" + str(miejsceZeroweBisekcji) +
+    print("\n------Metoda bisekcji------"
+          "\nMiejsce zerowe: " + str(miejsceZeroweBisekcji) +
           "\nLiczba iteracji: " + str(iterBisekcji) +
           "\nf(miejsce zerowe) = " + str(znalezionaWartoscZerowego))
 
@@ -136,29 +154,20 @@ if miejsceZeroweBisekcji != nieIstnieje:
 miejsceZeroweSiecznych, iterSiecznych = sie.metodaSiecznych(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, dokladnosc, maksIteracji)
 if miejsceZeroweSiecznych != nieIstnieje:
     znalezionaWartoscZerowego = funkcjaWybrana(miejsceZeroweSiecznych)
-    print("\nMetoda siecznych:"
-          "\nMiejsce zerowe:" + str(miejsceZeroweSiecznych) +
+    print("\n------Metoda siecznych------"
+          "\nMiejsce zerowe: " + str(miejsceZeroweSiecznych) +
           "\nLiczba iteracji: " + str(iterSiecznych) +
           "\nf(miejsce zerowe) = " + str(znalezionaWartoscZerowego))
 
-# jesli miejsce zerowe
-if miejsceZeroweBisekcji is not None and not (poczatekPrzedzialu < miejsceZeroweBisekcji < koniecPrzedzialu):
-    print("DEBUG: miejsce zerowe bisekcji poza przedziałem!")
-    rysowanieFunkcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, None, miejsceZeroweSiecznych)
+# jesli miejsce zerowe nie zostalo znalezione to narysuj funkcje bez
+if miejsceZeroweBisekcji != nieIstnieje and not (poczatekPrzedzialu < miejsceZeroweBisekcji < koniecPrzedzialu):
+    print("Nie udało się wykorzystać metody siecznych do znalezienia miejsca zerowego!\n"
+          "Spróbuj podać inny przedział.")
+    miejsceZeroweBisekcji = None
 
-elif miejsceZeroweSiecznych is not None and not (poczatekPrzedzialu < miejsceZeroweSiecznych < koniecPrzedzialu):
-    print("DEBUG: miejsce zerowe siecznych poza przedziałem!")
-    rysowanieFunkcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, miejsceZeroweBisekcji)
+elif miejsceZeroweSiecznych != nieIstnieje and not (poczatekPrzedzialu < miejsceZeroweSiecznych < koniecPrzedzialu):
+    print("Nie udało się wykorzystać metody siecznych do znalezienia miejsca zerowego!\n"
+          "Spróbuj podać inny przedział.")
+    miejsceZeroweSiecznych = None
 
-else:
-    rysowanieFunkcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, miejsceZeroweBisekcji, miejsceZeroweSiecznych)
-
-"""
-Todo
-1. dodac wiecej komentarzy
-2. usunac WSZYSTKIE break i "is not none"
-3. zrobić to jakoś żeby main lepiej wyglądał, bo te warunki sprawdzania poprawnosci wygladaja TRAGICZNIE
-4. Borowska mowila 5, 6 funkcji. Moze dodamy np. drugi (calkowicie inny) wielomian? Jej to sie moze spodobac (i maly koszt pracy)
-        ta f. kwadratowa mi srednio pasuje, moze lepiej jak zrobimy dwie wielomianowe i inna trygonometryczna (np. cos(x) - 0.2 ?)
-5. 12 linijka w siecznej, logika do poprawy (ja zepsulem, ja naprawie)
-"""
+rysowanieFunkcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, miejsceZeroweBisekcji, miejsceZeroweSiecznych)
