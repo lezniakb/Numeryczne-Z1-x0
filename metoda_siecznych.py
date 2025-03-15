@@ -9,7 +9,8 @@ def metodaSiecznych(funkcja, poczatek, koniec, dokladnosc=0, maksIteracji=0):
         mianownik = funkcja(x2) - funkcja(x1)
         # gdy funkcja zejdzie tak blisko 0 ze program uzna ze jest rowna 0
         if mianownik == 0:
-            return x2, iteracja
+            print("DEBUG: mianownik = 0")
+            return None, iteracja
         else:
             x3 = x2 - funkcja(x2) * (x2 - x1) / mianownik
             x1 = x2

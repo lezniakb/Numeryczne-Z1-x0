@@ -130,7 +130,7 @@ if wyborKryterium == 1:
             dokladnosc = float(dokladnosc)
             poprawnosc = 1
         else:
-            print("Epsilon musi być większy niż 0")
+            print("Epsilon musi być liczbą większą niż 0")
 # sprawdzaj w petli czy uzytkownik dobrze podal liczbe iteracji
 else:
     while poprawnosc == 0:
@@ -139,7 +139,7 @@ else:
             maksIteracji = int(maksIteracji)
             poprawnosc = 1
         else:
-            print("Liczba iteracji musi być większa niż 0")
+            print("Liczba iteracji musi być liczbą całkowitą większą niż 0")
 
 # metoda bisekcji tutaj liczona
 miejsceZeroweBisekcji, iterBisekcji = bis.metodaBisekcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, dokladnosc, maksIteracji)
@@ -161,13 +161,11 @@ if miejsceZeroweSiecznych != nieIstnieje:
 
 # jesli miejsce zerowe nie zostalo znalezione to narysuj funkcje bez
 if miejsceZeroweBisekcji != nieIstnieje and not (poczatekPrzedzialu < miejsceZeroweBisekcji < koniecPrzedzialu):
-    print("Nie udało się wykorzystać metody siecznych do znalezienia miejsca zerowego!\n"
-          "Spróbuj podać inny przedział.")
-    miejsceZeroweBisekcji = None
+    print("Nie udało się wykorzystać metody bisekcji do znalezienia miejsca zerowego w podanym przedziale!")
+    miejsceZeroweBisekcji = nieIstnieje
 
 elif miejsceZeroweSiecznych != nieIstnieje and not (poczatekPrzedzialu < miejsceZeroweSiecznych < koniecPrzedzialu):
-    print("Nie udało się wykorzystać metody siecznych do znalezienia miejsca zerowego!\n"
-          "Spróbuj podać inny przedział.")
-    miejsceZeroweSiecznych = None
+    print("Nie udało się wykorzystać metody siecznych do znalezienia miejsca zerowego w podanym przedziale!")
+    miejsceZeroweSiecznych = nieIstnieje
 
 rysowanieFunkcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, miejsceZeroweBisekcji, miejsceZeroweSiecznych)
