@@ -3,14 +3,14 @@ def metodaSiecznych(funkcja, poczatek, koniec, dokladnosc=0, maksIteracji=0):
     maksIteracjiDokladnosc = 200
     x1 = poczatek
     x2 = koniec
+    epsilon = 0.1
 
     for petla in range(maksIteracjiDokladnosc):
         iteracja += 1
         mianownik = funkcja(x2) - funkcja(x1)
         # gdy funkcja zejdzie tak blisko 0 ze program uzna ze jest rowna 0
-        if mianownik == 0:
-            print("DEBUG: mianownik = 0")
-            return None, iteracja
+        if abs(mianownik) < epsilon:
+            return x2, iteracja
         else:
             x3 = x2 - funkcja(x2) * (x2 - x1) / mianownik
             x1 = x2

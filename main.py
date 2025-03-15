@@ -94,12 +94,17 @@ koniecPrzedzialu = input("Podaj koniec przedziału: ")
 while zabezpieczenie(koniecPrzedzialu) == False:
     koniecPrzedzialu = input("Podaj koniec przedziału: ")
 
+print("\n-------------\n"
+      "Wybrana funkcja:", funkcje[wybor][0],
+      f"\nWybrany przedział: [{poczatekPrzedzialu}, {koniecPrzedzialu}]"
+      f"\n-------------\n")
+
 # zapisz przedzialy jako float
 poczatekPrzedzialu = float(poczatekPrzedzialu)
 koniecPrzedzialu = float(koniecPrzedzialu)
 
 if koniecPrzedzialu <= poczatekPrzedzialu:
-    print("Wprowadzono niewłaściwe przedziały!")
+    print("Wprowadzono niewłaściwy przedział!")
     exit(0)
 
 # wyswietl kryteria stopu
@@ -122,12 +127,16 @@ dokladnosc = 0
 maksIteracji = 0
 poprawnosc = 0
 
+
 # sprawdzaj w petli czy uzytkownik dobrze podal epsilon
 if wyborKryterium == 1:
     while poprawnosc == 0:
         dokladnosc = input("Podaj epsilon: ")
         if dokladnosc.replace('.', '', 1).isdigit() and float(dokladnosc) > 0:
             dokladnosc = float(dokladnosc)
+            print("\n-------------\n"
+                  "Wybrane kryterium stopu: Epsilon =", dokladnosc,
+                  "\n-------------\n")
             poprawnosc = 1
         else:
             print("Epsilon musi być liczbą większą niż 0")
@@ -137,35 +146,38 @@ else:
         maksIteracji = input("Podaj liczbę iteracji: ")
         if maksIteracji.isdigit() and int(maksIteracji) > 0:
             maksIteracji = int(maksIteracji)
+            print("\n-------------\n"
+                  "Wybrane kryterium stopu: Liczba iteracji =", maksIteracji,
+                  "\n-------------\n")
             poprawnosc = 1
         else:
             print("Liczba iteracji musi być liczbą całkowitą większą niż 0")
 
+
+print("[Wyniki]")
 # metoda bisekcji tutaj liczona
 miejsceZeroweBisekcji, iterBisekcji = bis.metodaBisekcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, dokladnosc, maksIteracji)
-if miejsceZeroweBisekcji != nieIstnieje:
+if miejsceZeroweBisekcji != nieIstnieje and poczatekPrzedzialu < miejsceZeroweBisekcji < koniecPrzedzialu:
     znalezionaWartoscZerowego = funkcjaWybrana(miejsceZeroweBisekcji)
-    print("\n------Metoda bisekcji------"
+    print("------Metoda bisekcji------"
           "\nMiejsce zerowe: " + str(miejsceZeroweBisekcji) +
           "\nLiczba iteracji: " + str(iterBisekcji) +
           "\nf(miejsce zerowe) = " + str(znalezionaWartoscZerowego))
+else:
+    print("Nie udało się wykorzystać metody bisekcji do znalezienia miejsca zerowego w podanym przedziale!\n"
+          "Spróbuj zmienić przedział.")
+    miejsceZeroweBisekcji = nieIstnieje
 
 # tutaj sieczne
 miejsceZeroweSiecznych, iterSiecznych = sie.metodaSiecznych(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, dokladnosc, maksIteracji)
-if miejsceZeroweSiecznych != nieIstnieje:
+if miejsceZeroweSiecznych != nieIstnieje and poczatekPrzedzialu < miejsceZeroweSiecznych < koniecPrzedzialu:
     znalezionaWartoscZerowego = funkcjaWybrana(miejsceZeroweSiecznych)
     print("\n------Metoda siecznych------"
           "\nMiejsce zerowe: " + str(miejsceZeroweSiecznych) +
           "\nLiczba iteracji: " + str(iterSiecznych) +
           "\nf(miejsce zerowe) = " + str(znalezionaWartoscZerowego))
-
-# jesli miejsce zerowe nie zostalo znalezione to narysuj funkcje bez
-if miejsceZeroweBisekcji != nieIstnieje and not (poczatekPrzedzialu < miejsceZeroweBisekcji < koniecPrzedzialu):
-    print("Nie udało się wykorzystać metody bisekcji do znalezienia miejsca zerowego w podanym przedziale!")
-    miejsceZeroweBisekcji = nieIstnieje
-
-elif miejsceZeroweSiecznych != nieIstnieje and not (poczatekPrzedzialu < miejsceZeroweSiecznych < koniecPrzedzialu):
-    print("Nie udało się wykorzystać metody siecznych do znalezienia miejsca zerowego w podanym przedziale!")
+else:
+    print("\nNie udało się wykorzystać metody siecznych do znalezienia miejsca zerowego w podanym przedziale!")
     miejsceZeroweSiecznych = nieIstnieje
 
 rysowanieFunkcji(funkcjaWybrana, poczatekPrzedzialu, koniecPrzedzialu, miejsceZeroweBisekcji, miejsceZeroweSiecznych)
