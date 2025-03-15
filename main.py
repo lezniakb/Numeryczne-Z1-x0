@@ -46,7 +46,7 @@ def zabezpieczenie(dane):
 
 # main
 funkcje = {
-    1:("Wielomianowa: 3x^6 + x^3 - 2x^2 - 1 (Horner)", r.funkcjaWielomianowaDodatnia),
+    1:("Wielomianowa: x^3 - 2x^2 - 5 (Horner)", r.funkcjaWielomianowaDodatnia),
     2:("Trygonometryczna: sin(x) - 0.5", r.funkcjaTrygonometryczna),
     3:("Wykładnicza: exp(x) - 3", r.funkcjaWykladnicza),
     4:("Złożona: exp(sin(x)) - 2", r.funkcjaZlozona),
