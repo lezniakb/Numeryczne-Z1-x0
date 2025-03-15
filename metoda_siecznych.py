@@ -4,7 +4,7 @@ def metodaSiecznych(funkcja, poczatek, koniec, dokladnosc=0, maksIteracji=0):
     x1 = poczatek
     x2 = koniec
 
-    for petla in range(maksIteracjiDokladnosc):
+    while True:
         iteracja += 1
         mianownik = funkcja(x2) - funkcja(x1)
         # gdy funkcja zejdzie tak blisko 0 ze program uzna ze jest rowna 0 (przyjmujemy 1e-12)
@@ -23,5 +23,3 @@ def metodaSiecznych(funkcja, poczatek, koniec, dokladnosc=0, maksIteracji=0):
                 return None, iteracja
         elif maksIteracji != 0 and iteracja >= maksIteracji:
             return x2, iteracja
-
-    return x2, iteracja
