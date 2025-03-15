@@ -50,7 +50,7 @@ funkcje = {
     2:("Trygonometryczna: sin(x) - 0.5", r.funkcjaTrygonometryczna),
     3:("Wykładnicza: exp(x) - 3", r.funkcjaWykladnicza),
     4:("Złożona: exp(sin(x)) - 2", r.funkcjaZlozona),
-    5:("Kwadratowa: (bez miejsc zerowych)", r.funkcjaBezMiejscZerowych),
+    5:("Kwadratowa: x^2 + 5 (bez miejsc zerowych)", r.funkcjaBezMiejscZerowych),
     6:("Wielomianowa: -2x^3 + 4x^2 + 5 (Horner)", r.funkcjaWielomianowaUjemna)
 }
 nieIstnieje = None
