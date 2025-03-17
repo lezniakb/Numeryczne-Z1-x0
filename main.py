@@ -95,7 +95,7 @@ while zabezpieczenie(koniecPrzedzialu) == False:
     koniecPrzedzialu = input("Podaj koniec przedziału: ")
 
 print("\n-------------\n"
-      "Wybrana funkcja:", funkcje[wybor][0],
+      "Wybrana funkcja:", funkcje[wyborFunkcji][0],
       f"\nWybrany przedział: [{poczatekPrzedzialu}, {koniecPrzedzialu}]"
       f"\n-------------\n")
 

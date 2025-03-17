@@ -31,4 +31,3 @@ def metodaBisekcji(funkcja, poczatek, koniec, dokladnosc=0, maksIteracji=0):
             a = x0
         elif f0 * fa < 0:
             b = x0
-
